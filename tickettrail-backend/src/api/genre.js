@@ -28,7 +28,7 @@ const allGenres = async (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "No genres found" });
-    res.status(200).json({ success: true, users: allGenres });
+    res.status(200).json({ success: true, genres: allGenres });
   } catch (err) {
     console.error("Server Error", err);
   }

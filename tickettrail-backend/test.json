@@ -1,0 +1,42 @@
+{
+  "success": true,
+  "users": [
+    {
+      "id": 1,
+      "name": "Oderinde Gabriel",
+      "password": "$2a$10$WwIr06NZ4FRir3eJLxTBRe8Z9SeR4q19PEdNHTQRXeaX6S8zC15r2",
+      "email": "gab@gmail.com",
+      "role": "user",
+      "createdAt": "2024-12-02T19:28:48.409Z",
+      "updatedAt": "2024-12-02T19:28:48.409Z",
+      "userReservations": [
+        {
+          "id": 1,
+          "ownerId": 1,
+          "movieId": 2,
+          "seatId": 1,
+          "createdAt": "2024-12-02T19:30:00.203Z",
+          "updatedAt": "2024-12-02T19:30:00.203Z",
+          "seat": {
+            "id": 1,
+            "name": "A1",
+            "seatStatus": "reserved",
+            "createdAt": "2024-12-02T15:09:37.071Z",
+            "updatedAt": "2024-12-02T19:30:00.198Z"
+          },
+          "movie": {
+            "id": 2,
+            "title": "BloodShot",
+            "description": "some-desc",
+            "posterImg": "some-poster",
+            "genreId": 1,
+            "showtime": "12:30:00",
+            "showdate": "2024-12-07",
+            "createdAt": "2024-12-02T14:46:03.665Z",
+            "updatedAt": "2024-12-02T14:46:03.665Z"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-const { User, Reservation } = require("../db/models/index");
+const { User, Reservation, Seat, Movie } = require("../db/models/index");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -72,7 +72,31 @@ const userLogIn = async (req, res) => {
 
 const allUsers = async (req, res) => {
   try {
-    const allUsers = await User.findAll();
+    const checkReservations = await Reservation.findAll();
+
+    const queryOption =
+      checkReservations.length !== 0
+        ? {
+            include: [
+              {
+                model: Reservation,
+                as: "userReservations",
+                include: [
+                  {
+                    model: Seat,
+                    as: "seat",
+                  },
+                  {
+                    model: Movie,
+                    as: "movie",
+                  },
+                ],
+              },
+            ],
+          }
+        : {};
+
+    const allUsers = await User.findAll(queryOption);
     if (!allUsers || allUsers.length === 0)
       return res
         .status(400)
@@ -86,7 +110,34 @@ const allUsers = async (req, res) => {
 const singleUser = async (req, res) => {
   try {
     const { userID } = req.params;
-    const singleUser = await User.findByPk(userID);
+    const checkReservations = await Reservation.findOne({
+      where: {
+        ownerId: userID,
+      },
+    });
+
+    const queryOption = checkReservations
+      ? {
+          include: [
+            {
+              model: Reservation,
+              as: "userReservations",
+              include: [
+                {
+                  model: Seat,
+                  as: "seat",
+                },
+                {
+                  model: Movie,
+                  as: "movie",
+                },
+              ],
+            },
+          ],
+        }
+      : {};
+
+    const singleUser = await User.findByPk(userID, queryOption);
     if (!singleUser)
       return res
         .status(400)

@@ -1,4 +1,3 @@
-const { where } = require("sequelize");
 const { Reservation, User, Movie, Seat } = require("../db/models/index");
 
 const allReservations = async (req, res) => {
@@ -7,7 +6,7 @@ const allReservations = async (req, res) => {
       include: [
         {
           model: User,
-          as: "user",
+          as: "owner",
         },
         {
           model: Movie,
@@ -101,7 +100,7 @@ const singleReservation = async (req, res) => {
       include: [
         {
           model: User,
-          as: "user",
+          as: "owner",
         },
         {
           model: Movie,

@@ -13,8 +13,8 @@ Reservation.belongsTo(Movie, { foreignKey: "movieId", as: "movie" });
 Seat.hasOne(Reservation, { foreignKey: "seatId", as: "reservation" });
 Reservation.belongsTo(Seat, { foreignKey: "seatId", as: "seat" });
 
-Reservation.hasOne(User, {foreignKey: 'ownerId', as: 'user'});
 User.hasMany(Reservation, { foreignKey: 'ownerId', as: 'userReservations'});
+Reservation.belongsTo(User, {foreignKey: 'ownerId', as: 'owner'});
 
 module.exports = {
   Genre,
