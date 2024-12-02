@@ -1,12 +1,12 @@
-const { Genre } = require("../db/models/index");
+const { Genre, Movie } = require("../db/models/index");
 
-const createGenre = (req, res) => {
+const createGenre = async (req, res) => {
   try {
     const { name } = req.body;
     let newgenre = new Genre({
       name,
     });
-    newgenre = newgenre.save();
+    newgenre = await newgenre.save();
     if (!newgenre)
       return res
         .status(400)
@@ -21,7 +21,9 @@ const createGenre = (req, res) => {
 
 const allGenres = async (req, res) => {
   try {
-    const allGenres = await Genre.findAll();
+    const allGenres = await Genre.findAll({
+      include: [{ model: Movie, as: "movies" }],
+    });
     if (!allGenres || allGenres.length === 0)
       return res
         .status(400)
@@ -35,7 +37,12 @@ const allGenres = async (req, res) => {
 const singleGenre = async (req, res) => {
   try {
     const { genreID } = req.params;
-    const singleGenre = await Genre.findByPk(genreID);
+    const singleGenre = await Genre.findByPk(genreID, {
+      include: {
+        model: Movie,
+        as: "movies",
+      },
+    });
     if (!singleGenre)
       return res
         .status(400)

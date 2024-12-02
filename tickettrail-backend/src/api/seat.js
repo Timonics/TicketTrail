@@ -20,7 +20,7 @@ const createSeat = async (req, res) => {
       name,
       seatStatus,
     });
-    newseat = newseat.save();
+    newseat = await newseat.save();
     if (!newseat) {
       return res
         .status(400)
@@ -82,10 +82,32 @@ const singleSeat = async (req, res) => {
   }
 };
 
+const updateSeat = async (req, res) => {
+  try {
+    const { seatID } = req.params;
+    const updateSeat = await Seat.update(
+      { seatStatus: "available" },
+      { where: { id: seatID } }
+    );
+    if (!updateSeat) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Seat not updated" });
+    }
+    res.status(200).json({
+      success: true,
+      message: "Seat successfully updated",
+      updatedSeat: updateSeat,
+    });
+  } catch (err) {
+    console.error("Server Error", err);
+  }
+};
+
 const deleteSeat = async (req, res) => {
   try {
     const { seatID } = req.params;
-    const deleteSeat = await Seat.destroy(seatID);
+    const deleteSeat = await Seat.destroy({ where: { id: seatID } });
     if (!deleteSeat)
       return res
         .status(400)
@@ -101,6 +123,7 @@ const deleteSeat = async (req, res) => {
 module.exports = {
   allSeats,
   createSeat,
+  updateSeat,
   availableSeats,
   reservedSeats,
   singleSeat,

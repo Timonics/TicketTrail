@@ -2,7 +2,12 @@ const { Movie, Genre } = require("../db/models/index");
 
 const allMovies = async (req, res) => {
   try {
-    const allMovies = await Movie.findAll();
+    const allMovies = await Movie.findAll({
+      include: {
+        model: Genre,
+        as: "genre",
+      },
+    });
     if (!allMovies || allMovies.length === 0)
       return res
         .status(400)
@@ -30,7 +35,7 @@ const createMovie = async (req, res) => {
       showdate,
       showtime,
     });
-    newMovie = newMovie.save();
+    newMovie = await newMovie.save();
     if (!newMovie) {
       return res
         .status(400)
@@ -47,7 +52,12 @@ const createMovie = async (req, res) => {
 const singleMovie = async (req, res) => {
   try {
     const { movieID } = req.params;
-    const singleMovie = await Movie.findByPk(movieID);
+    const singleMovie = await Movie.findByPk(movieID, {
+      include: {
+        model: Genre,
+        as: "genre",
+      },
+    });
     if (!singleMovie)
       return res
         .status(400)

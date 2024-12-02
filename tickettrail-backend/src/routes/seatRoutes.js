@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { createSeat, allSeats, availableSeats, reservedSeats, singleSeat, deleteSeat  } = require("../api/seat");
+const { createSeat, allSeats, availableSeats, reservedSeats, singleSeat, deleteSeat, updateSeat  } = require("../api/seat");
 
 router
     .post("/new-seat", createSeat)
@@ -11,6 +11,7 @@ router
 
 router.route("/:seatID")
     .get(singleSeat)
+    .put(updateSeat)
     .delete(deleteSeat)
 
 module.exports = router;

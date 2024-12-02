@@ -3,7 +3,22 @@ const { Reservation, User, Movie, Seat } = require("../db/models/index");
 
 const allReservations = async (req, res) => {
   try {
-    const allReservations = await Reservation.findAll();
+    const allReservations = await Reservation.findAll({
+      include: [
+        {
+          model: User,
+          as: "user",
+        },
+        {
+          model: Movie,
+          as: "movie",
+        },
+        {
+          model: Seat,
+          as: "seat",
+        },
+      ],
+    });
     if (!allReservations || allReservations.length === 0)
       return res
         .status(400)
@@ -36,6 +51,8 @@ const createReservation = async (req, res) => {
         .status(400)
         .json({ success: false, message: "This seat does not exist" });
 
+    console.log(seat.seatStatus);
+
     if (seat.seatStatus == "reserved")
       return res.status(400).json({
         success: false,
@@ -48,8 +65,6 @@ const createReservation = async (req, res) => {
       seatId,
     });
 
-    newreservation = newreservation.save();
-
     if (newreservation) {
       await Seat.update(
         {
@@ -61,6 +76,8 @@ const createReservation = async (req, res) => {
           },
         }
       );
+
+      newreservation = await newreservation.save();
 
       res.status(200).json({
         success: true,
@@ -80,7 +97,22 @@ const createReservation = async (req, res) => {
 const singleReservation = async (req, res) => {
   try {
     const { reservationID } = req.params;
-    const singleReservation = await User.findByPk(reservationID);
+    const singleReservation = await Reservation.findByPk(reservationID, {
+      include: [
+        {
+          model: User,
+          as: "user",
+        },
+        {
+          model: Movie,
+          as: "movie",
+        },
+        {
+          model: Seat,
+          as: "seat",
+        },
+      ],
+    });
     if (!singleReservation)
       return res
         .status(400)
@@ -94,11 +126,30 @@ const singleReservation = async (req, res) => {
 const deleteReservation = async (req, res) => {
   try {
     const { reservationID } = req.params;
-    const deleteReservation = await Reservation.destroy(reservationID);
+    const reservation = await Reservation.findByPk(reservationID, {
+      include: {
+        model: Seat,
+        as: "seat",
+      },
+    });
+    if (!reservation)
+      return res
+        .status(400)
+        .json({ success: false, message: "Reservation not found" });
+
+    await Seat.update(
+      { seatStatus: "available" },
+      { where: { id: reservation.seat.id } }
+    );
+
+    const deleteReservation = await Reservation.destroy({
+      where: { id: reservationID },
+    });
     if (!deleteReservation)
       return res
         .status(400)
         .json({ success: false, message: "Reservation not deleted" });
+
     res.status(200).json({
       success: true,
       message: `Reservation ${reservationID} has been deleted`,
