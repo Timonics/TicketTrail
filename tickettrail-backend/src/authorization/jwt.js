@@ -19,15 +19,11 @@ const authJwt = () => {
       const reqPath = req.path;
 
       const matchRoute = (routePath, requestPath) => {
-        const routeRegex = new RegExp(
-          routePath
-            .replace(/:[^\s/]+/g, "(\\d+)") // Match numeric IDs (PostgreSQL IDs)
-            .replace(/\//g, "\\/") // Escape forward slashes
-        );
-        return routeRegex.test(requestPath);
+        const isMatched = match(routePath)(requestPath);
+        return isMatched != false;
       };
 
-      const allowedUserRoutes = [
+      const ALLOWED_USER_ROUTES = [
         { path: `${api}users/:userID`, method: "GET" },
         { path: `${api}users/:userID`, method: "PUT" },
         { path: `${api}users/:userID`, method: "DELETE" },
@@ -42,7 +38,7 @@ const authJwt = () => {
       ];
 
       if (userRole == "user") {
-        const isAllowed = allowedUserRoutes.some(
+        const isAllowed = ALLOWED_USER_ROUTES.some(
           (route) =>
             req.method == route.method && matchRoute(route.path, reqPath)
         );
@@ -53,7 +49,7 @@ const authJwt = () => {
 
         let reservationID;
         const userReservationPathWithID = userReservationRouteWithID.path;
-        if (userReservationRouteWithID && !reqPath.includes("new-reservation"))  
+        if (userReservationRouteWithID && !reqPath.includes("new-reservation"))
           reservationID = userReservationRouteWithID.params.reservationID;
 
         if (reqPath === userReservationPathWithID && reservationID) {
