@@ -5,9 +5,11 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const morgan = require("morgan");
+const authJwt = require("./src/authorization/jwt");
 
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(authJwt());
 
 const api = process.env.api;
 const PORT = process.env.PORT;
