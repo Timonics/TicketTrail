@@ -50,8 +50,6 @@ const createReservation = async (req, res) => {
         .status(400)
         .json({ success: false, message: "This seat does not exist" });
 
-    console.log(seat.seatStatus);
-
     if (seat.seatStatus == "reserved")
       return res.status(400).json({
         success: false,

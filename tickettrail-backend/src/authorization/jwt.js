@@ -29,6 +29,8 @@ const authJwt = () => {
 
       const allowedUserRoutes = [
         { path: `${api}users/:userID`, method: "GET" },
+        { path: `${api}users/:userID`, method: "PUT" },
+        { path: `${api}users/:userID`, method: "DELETE" },
         { path: `${api}movies`, method: "GET" },
         { path: `${api}movies/:movieID`, method: "GET" },
         { path: `${api}genres`, method: "GET" },
@@ -36,12 +38,7 @@ const authJwt = () => {
         { path: `${api}reservations/new-reservation`, method: "POST" },
         { path: `${api}reservations/:reservationID`, method: "GET" },
         { path: `${api}reservations/:reservationID`, method: "DELETE" },
-        {
-          path: `${api}seats/available-seats
-        
-        `,
-          method: "GET",
-        },
+        { path: `${api}seats/available-seats`, method: "GET" },
       ];
 
       if (userRole == "user") {
@@ -56,7 +53,7 @@ const authJwt = () => {
 
         let reservationID;
         const userReservationPathWithID = userReservationRouteWithID.path;
-        if (userReservationRouteWithID.params)
+        if (userReservationRouteWithID && !reqPath.includes("new-reservation"))  
           reservationID = userReservationRouteWithID.params.reservationID;
 
         if (reqPath === userReservationPathWithID && reservationID) {
@@ -68,10 +65,8 @@ const authJwt = () => {
           });
 
           if (!reservation || reservation.owner.id !== userId) {
-            console.log("This user is not the owner of this reservation");
             return true;
           } else {
-            console.log("This user is the owner of this reservation");
             return false;
           }
         }
@@ -85,10 +80,8 @@ const authJwt = () => {
         if (reqPath === userRoutePath && userID) {
           const user = await User.findByPk(userID);
           if (!user || user.id !== userId) {
-            console.log("This user is not the owner of this account");
             return true;
           } else {
-            console.log("This user is the owner of this account");
             return false;
           }
         }
