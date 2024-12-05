@@ -3,7 +3,7 @@ const Reservation = require("./reservation");
 const Movie = require("./movie");
 const Seat = require("./seat");
 const User = require("./user");
-const ShowTime = require("./showtime");
+const Showtime = require("./showtime");
 
 Genre.hasMany(Movie, { foreignKey: "genreId", as: "movies" });
 Movie.belongsTo(Genre, { foreignKey: "genreId", as: "genre" });
@@ -17,8 +17,8 @@ Reservation.belongsTo(Seat, { foreignKey: "seatId", as: "seat" });
 User.hasMany(Reservation, { foreignKey: "ownerId", as: "userReservations" });
 Reservation.belongsTo(User, { foreignKey: "ownerId", as: "owner" });
 
-ShowTime.hasOne(Movie, { foreignKey: "showtimeId", as: "showTime" });
-Movie.belongsTo(ShowTime, { foreignKey: "showtimeId", as: "movie" });
+Showtime.hasOne(Movie, { foreignKey: "showtimeId", as: "showtime" });
+Movie.belongsTo(Showtime, { foreignKey: "showtimeId", as: "showtime" });
 
 module.exports = {
   Genre,
@@ -26,5 +26,5 @@ module.exports = {
   Movie,
   Seat,
   User,
-  ShowTime,
+  Showtime,
 };

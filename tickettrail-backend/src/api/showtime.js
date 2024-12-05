@@ -1,4 +1,18 @@
-const { ShowTime } = require("../db/models");
+const { Showtime } = require("../db/models");
+
+const allShowTimes = async (req, res) => {
+  try {
+    const showTimes = await Showtime.findAll();
+    if (!showTimes || showTimes.length === 0)
+      return res
+        .status(404)
+        .json({ success: false, message: "No show times found" });
+
+    res.json({ success: true, showTimes: showTimes });
+  } catch (err) {
+    console.error("Server Error", err);
+  }
+};
 
 const createShowTime = async (req, res) => {
   try {
@@ -31,7 +45,7 @@ const createShowTime = async (req, res) => {
       return res.status(400).json({ error: "showDate cannot be in the past." });
     }
 
-    let newShowTime = new ShowTime({
+    let newShowTime = new Showtime({
       showTime,
       showDate,
     });
@@ -83,7 +97,7 @@ const updateShowTime = async (req, res) => {
       return res.status(400).json({ error: "showDate cannot be in the past." });
     }
 
-    const updateShowTime = await ShowTime.update(
+    const updateShowTime = await Showtime.update(
       {
         showTime,
         showDate,
@@ -109,7 +123,7 @@ const updateShowTime = async (req, res) => {
 const deleteShowTime = async (req, res) => {
   try {
     const { showTimeID } = req.params;
-    const deleteShowTime = await ShowTime.destroy({
+    const deleteShowTime = await Showtime.destroy({
       where: { id: showTimeID },
     });
     if (!deleteShowTime)
@@ -124,4 +138,4 @@ const deleteShowTime = async (req, res) => {
   }
 };
 
-module.exports = { createShowTime, updateShowTime, deleteShowTime };
+module.exports = { allShowTimes, createShowTime, updateShowTime, deleteShowTime };

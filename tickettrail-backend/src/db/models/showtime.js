@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/database");
 
-const ShowTime = sequelize.define(
-  "ShowTime",
+const Showtime = sequelize.define(
+  "Showtime",
   {
     id: {
       allowNull: false,
@@ -22,4 +22,4 @@ const ShowTime = sequelize.define(
   { freezeTableName: true }
 );
 
-module.exports = ShowTime;
+module.exports = Showtime;

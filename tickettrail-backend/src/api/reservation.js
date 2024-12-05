@@ -1,9 +1,4 @@
-const {
-  Reservation,
-  User,
-  Movie,
-  Seat,
-} = require("../db/models/index");
+const { Reservation, User, Movie, Seat } = require("../db/models/index");
 
 const allReservations = async (req, res) => {
   try {
@@ -76,7 +71,7 @@ const createReservation = async (req, res) => {
     if (newreservation) {
       const reservationObj = {
         reservedFor: owner.name,
-        reservedMovieName: movie.name,
+        reservedMovieName: movie.title,
         reservedMovieId: movie.id,
       };
       let allreservations = seat.reservations || [];
@@ -84,7 +79,8 @@ const createReservation = async (req, res) => {
 
       await Seat.update(
         {
-          reservations: allReservations,
+          name: seat.name,
+          reservations: allreservations,
         },
         { where: { id: seatId } }
       );

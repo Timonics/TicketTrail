@@ -1,12 +1,18 @@
-const { Movie, Genre, ShowTime } = require("../db/models/index");
+const { Movie, Genre, Showtime } = require("../db/models/index");
 
 const allMovies = async (req, res) => {
   try {
     const allMovies = await Movie.findAll({
-      include: {
-        model: Genre,
-        as: "genre",
-      },
+      include: [
+        {
+          model: Genre,
+          as: "genre",
+        },
+        {
+          model: Showtime,
+          as: "showtime",
+        },
+      ],
     });
     if (!allMovies || allMovies.length === 0)
       return res
@@ -26,11 +32,21 @@ const createMovie = async (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "This genre does not exist" });
-    const showtime = await ShowTime.findByPk(showtimeId);
+    const showtime = await Showtime.findByPk(showtimeId);
     if (!showtime)
       return res
         .status(400)
         .json({ success: false, message: "This showtime does not exist" });
+    if (showtime) {
+      const isShowTimeBooked = await Movie.findOne({
+        where: { showtimeId: showtime.id },
+      });
+      if (isShowTimeBooked)
+        return res.status(400).json({
+          success: false,
+          message: "This showtime has already been booked for a movie",
+        });
+    }
     let newMovie = new Movie({
       title,
       description,
@@ -80,11 +96,21 @@ const updateMovie = async (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "This genre does not exist" });
-    const showtime = await ShowTime.findByPk(showtimeId);
+    const showtime = await Showtime.findByPk(showtimeId);
     if (!showtime)
       return res
         .status(400)
         .json({ success: false, message: "This showtime does not exist" });
+    if (showtime) {
+      const isShowTimeBooked = await Movie.findOne({
+        where: { showtimeId: showtime.id },
+      });
+      if (isShowTimeBooked)
+        return res.status(400).json({
+          success: false,
+          message: "This showtime has already been booked for a movie",
+        });
+    }
     const updateMovie = await Movie.update(
       {
         title,
@@ -107,7 +133,6 @@ const updateMovie = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Movie successfully updated",
-      updatedMovie: updateMovie,
     });
   } catch (err) {
     console.error("Server Error", err);
