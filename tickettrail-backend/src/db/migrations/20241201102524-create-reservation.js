@@ -9,6 +9,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      ownerId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
       movieId: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -28,6 +32,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Reservations");
+    await queryInterface.dropTable("Reservation");
   },
 };

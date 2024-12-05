@@ -1,4 +1,9 @@
-const { Reservation, User, Movie, Seat } = require("../db/models/index");
+const {
+  Reservation,
+  User,
+  Movie,
+  Seat,
+} = require("../db/models/index");
 
 const allReservations = async (req, res) => {
   try {
@@ -50,11 +55,17 @@ const createReservation = async (req, res) => {
         .status(400)
         .json({ success: false, message: "This seat does not exist" });
 
-    if (seat.seatStatus == "reserved")
-      return res.status(400).json({
-        success: false,
-        message: "This seat has been reserved, choose another seat",
-      });
+    if (seat.reservations) {
+      const check = seat.reservations.some(
+        (reservation) => reservation.reservedMovieId === movieId
+      );
+      if (check)
+        return res.status(400).json({
+          success: false,
+          message:
+            "This seat has been reserved, choose another seat or check the list of available seats for this showtime",
+        });
+    }
 
     let newreservation = new Reservation({
       ownerId,
@@ -63,15 +74,19 @@ const createReservation = async (req, res) => {
     });
 
     if (newreservation) {
+      const reservationObj = {
+        reservedFor: owner.name,
+        reservedMovieName: movie.name,
+        reservedMovieId: movie.id,
+      };
+      let allreservations = seat.reservations || [];
+      allreservations.push(reservationObj);
+
       await Seat.update(
         {
-          seatStatus: "reserved",
+          reservations: allReservations,
         },
-        {
-          where: {
-            id: seatId,
-          },
-        }
+        { where: { id: seatId } }
       );
 
       newreservation = await newreservation.save();

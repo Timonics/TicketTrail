@@ -15,10 +15,9 @@ const allSeats = async (req, res) => {
 
 const createSeat = async (req, res) => {
   try {
-    const { name, seatStatus } = req.body;
+    const { name } = req.body;
     let newseat = new Seat({
       name,
-      seatStatus,
     });
     newseat = await newseat.save();
     if (!newseat) {
@@ -82,28 +81,6 @@ const singleSeat = async (req, res) => {
   }
 };
 
-const updateSeat = async (req, res) => {
-  try {
-    const { seatID } = req.params;
-    const updateSeat = await Seat.update(
-      { seatStatus: "available" },
-      { where: { id: seatID } }
-    );
-    if (!updateSeat) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Seat not updated" });
-    }
-    res.status(200).json({
-      success: true,
-      message: "Seat successfully updated",
-      updatedSeat: updateSeat,
-    });
-  } catch (err) {
-    console.error("Server Error", err);
-  }
-};
-
 const deleteSeat = async (req, res) => {
   try {
     const { seatID } = req.params;
@@ -123,7 +100,6 @@ const deleteSeat = async (req, res) => {
 module.exports = {
   allSeats,
   createSeat,
-  updateSeat,
   availableSeats,
   reservedSeats,
   singleSeat,

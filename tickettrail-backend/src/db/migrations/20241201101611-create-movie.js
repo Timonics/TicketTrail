@@ -25,12 +25,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      showtime: {
-        type: Sequelize.TIME,
-        allowNull: false,
-      },
-      showdate: {
-        type: Sequelize.DATEONLY,
+      showtimeId: {
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       createdAt: {
@@ -44,6 +40,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Movies");
+    await queryInterface.dropTable("Movie");
   },
 };

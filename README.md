@@ -28,7 +28,7 @@ TicketTrail is a movie reservation backend system designed to handle user authen
   - View all user reservations.
 - **User Management:**
   - Add, update, or delete users. (manage user accounts)
- - **Seat Management:**
+- **Seat Management:**
   - Add, update, or delete seats. (manage theater seating)
 
 ### Security

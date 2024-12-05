@@ -19,12 +19,14 @@ const seatRouter = require("./src/routes/seatRoutes");
 const genreRouter = require("./src/routes/genreRoutes");
 const movieRouter = require("./src/routes/movieRoutes");
 const reservationRouter = require("./src/routes/reservationRoutes");
+const showtimeRouter = require("./src/routes/showtimeRoutes");
 
 app.use(`${api}users`, userRouter);
 app.use(`${api}seats`, seatRouter);
 app.use(`${api}genres`, genreRouter);
 app.use(`${api}movies`, movieRouter);
 app.use(`${api}reservations`, reservationRouter);
+app.use(`${api}showtimes`, showtimeRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on PORT: ${PORT}`);

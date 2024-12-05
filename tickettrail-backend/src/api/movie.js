@@ -1,4 +1,4 @@
-const { Movie, Genre } = require("../db/models/index");
+const { Movie, Genre, ShowTime } = require("../db/models/index");
 
 const allMovies = async (req, res) => {
   try {
@@ -20,20 +20,23 @@ const allMovies = async (req, res) => {
 
 const createMovie = async (req, res) => {
   try {
-    const { title, description, posterImg, genreId, showtime, showdate } =
-      req.body;
+    const { title, description, posterImg, genreId, showtimeId } = req.body;
     const genre = await Genre.findByPk(genreId);
     if (!genre)
       return res
         .status(400)
         .json({ success: false, message: "This genre does not exist" });
+    const showtime = await ShowTime.findByPk(showtimeId);
+    if (!showtime)
+      return res
+        .status(400)
+        .json({ success: false, message: "This showtime does not exist" });
     let newMovie = new Movie({
       title,
       description,
       posterImg,
       genreId,
-      showdate,
-      showtime,
+      showtimeId,
     });
     newMovie = await newMovie.save();
     if (!newMovie) {
@@ -71,21 +74,24 @@ const singleMovie = async (req, res) => {
 const updateMovie = async (req, res) => {
   try {
     const { movieID } = req.params;
-    const { title, description, posterImg, genreId, showtime, showdate } =
-      req.body;
+    const { title, description, posterImg, genreId, showtimeId } = req.body;
     const genre = await Genre.findByPk(genreId);
     if (!genre)
       return res
         .status(400)
         .json({ success: false, message: "This genre does not exist" });
+    const showtime = await ShowTime.findByPk(showtimeId);
+    if (!showtime)
+      return res
+        .status(400)
+        .json({ success: false, message: "This showtime does not exist" });
     const updateMovie = await Movie.update(
       {
         title,
         description,
         posterImg,
         genreId,
-        showtime,
-        showdate,
+        showtimeId,
       },
       {
         where: {

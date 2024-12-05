@@ -2,6 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/database");
 
 const Genre = require('./genre');
+const ShowTime = require("./showtime");
 
 const Movie = sequelize.define(
   "Movie",
@@ -32,13 +33,13 @@ const Movie = sequelize.define(
         key: "id"
       }
     },
-    showtime: {
-      type: DataTypes.TIME,
+    showtimeId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-    },
-    showdate: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
+      references: {
+        model: ShowTime,
+        key: "id"
+      }
     },
   },
   { freezeTableName: true }

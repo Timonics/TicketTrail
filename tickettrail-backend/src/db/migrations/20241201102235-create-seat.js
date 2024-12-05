@@ -13,9 +13,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      seatStatus: {
-        type: Sequelize.ENUM("reserved", "available"),
-        allowNull: false,
+      reservations: {
+        type: Sequelize.JSONB,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,
@@ -28,6 +28,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Seats");
+    await queryInterface.dropTable("Seat");
   },
 };

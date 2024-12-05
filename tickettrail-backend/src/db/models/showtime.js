@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/database");
 
-const Seat = sequelize.define(
-  "Seat",
+const ShowTime = sequelize.define(
+  "ShowTime",
   {
     id: {
       allowNull: false,
@@ -10,16 +10,16 @@ const Seat = sequelize.define(
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    name: {
-      type: DataTypes.STRING,
+    showTime: {
+      type: DataTypes.TIME,
       allowNull: false,
     },
-    reservations: {
-      type: DataTypes.JSONB,
-      allowNull: true,
+    showDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
     },
   },
   { freezeTableName: true }
 );
 
-module.exports = Seat;
+module.exports = ShowTime;
