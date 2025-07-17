@@ -71,7 +71,7 @@ const authJwt = () => {
         let userID;
         if (userRoute.params) userID = userRoute.params.userID;
 
-        if (reqPath === userRoute.path && userID) {
+        if (reqPath === userRoute.path && userID && req.method !== "GET") {
           const user = await User.findByPk(userID);
           if (!user || user.id !== userId) {
             return true;
