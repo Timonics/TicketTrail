@@ -19,7 +19,7 @@ const createGenre = async (req, res) => {
   }
 };
 
-const allGenres = async (req, res) => {
+const allGenres = async (_, res) => {
   try {
     const allGenres = await Genre.findAll({
       include: [{ model: Movie, as: "movies" }],

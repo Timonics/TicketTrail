@@ -48,11 +48,10 @@ const authJwt = () => {
         )(reqPath);
 
         let reservationID;
-        const userReservationPathWithID = userReservationRouteWithID.path;
         if (userReservationRouteWithID && !reqPath.includes("new-reservation"))
           reservationID = userReservationRouteWithID.params.reservationID;
 
-        if (reqPath === userReservationPathWithID && reservationID) {
+        if (reqPath === userReservationRouteWithID.path && reservationID) {
           const reservation = await Reservation.findByPk(reservationID, {
             include: {
               model: User,
@@ -70,10 +69,9 @@ const authJwt = () => {
         const userRoute = match(`${api}users/:userID`, { end: false })(reqPath);
 
         let userID;
-        const userRoutePath = userRoute.path;
         if (userRoute.params) userID = userRoute.params.userID;
 
-        if (reqPath === userRoutePath && userID) {
+        if (reqPath === userRoute.path && userID) {
           const user = await User.findByPk(userID);
           if (!user || user.id !== userId) {
             return true;

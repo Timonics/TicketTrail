@@ -1,6 +1,6 @@
 const { Reservation, User, Movie, Seat } = require("../db/models/index");
 
-const allReservations = async (req, res) => {
+const allReservations = async (_, res) => {
   try {
     const allReservations = await Reservation.findAll({
       include: [
@@ -138,7 +138,7 @@ const deleteReservation = async (req, res) => {
       include: {
         model: Seat,
         as: "seat",
-      },
+      },kw
     });
     if (!reservation)
       return res

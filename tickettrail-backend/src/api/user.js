@@ -101,7 +101,7 @@ const allUsers = async (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "No users found" });
-    res.status(200).json({ success: true, users: allUsers });
+    return res.status(200).json({ success: true, users: allUsers });
   } catch (err) {
     console.error("Server Error", err);
   }

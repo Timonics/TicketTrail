@@ -1,4 +1,4 @@
-const { Seat } = require("../db/models/index");
+const { Seat, Movie, Showtime } = require("../db/models/index");
 
 const allSeats = async (req, res) => {
   try {
@@ -35,6 +35,17 @@ const createSeat = async (req, res) => {
 
 const availableSeats = async (req, res) => {
   try {
+    const { movieId } = req.body;
+    const movie = await Movie.findByPk(movieId, {
+      include: {
+        model: Showtime,
+        as: "showtime"
+      }
+    })
+    if (!movie)
+      return res
+        .status(400)
+        .json({ success: false, message: "This movie does not exist" });
     const availableSeats = await Seat.findAll({
       where: {
         seatStatus: "available",
